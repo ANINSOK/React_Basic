@@ -2,6 +2,27 @@
   text-align: center;
 }
 
+/* 상단 메뉴 */
+.nav-bar {
+  display: flex;
+  background: darkgreen;
+  width: 100%;
+  color: rgb(170, 255, 0);
+  padding-left: 20px;
+}
+
+/* 발행 글 목록 UI */
+div {
+  box-sizing: border-box;
+}
+
+.post-list {
+  padding-left: 20px;
+  text-align: left;
+  border-top: 2px solid green;
+  border-bottom: 2px solid green;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
