@@ -1,11 +1,24 @@
+
 // import logo from './logo.svg';
 import "./App.css";
 import { useState } from "react";
 
+
 function App() {
-  // 서버에서 변수 가져왔다 치고, 여긴 서버에서 받는 정보임@@@ 단순 선언 아님@@@
+  // @@@ 여긴 서버임 서버에서 가져온 변수임 @@@ 단순 선언 아님 @@@
   let mainTitle = "INSHAKE";
-  let [postTitle] = useState(["글제목1", "글제목2", "글제목3"]);
+  let [postTitle, setPostTitle] = useState(["글제목1", "글제목2", "글제목3"]);
+  let [likes, setLikes] = useState([0, 0, 0]);
+  let [modal, setModal] = useState(0)
+  let [modalState, setModalState] = useState(0)
+  let [newPost, setNewPost] = useState('')
+  // @@@ 여긴 서버임 서버에서 가져온 변수임 @@@ 단순 선언 아님 @@@
+
+  // 함수
+  // const onReset = (e) => {
+  //   setText("");
+  // };
+  // 함수
 
   return (
     <div className="App">
@@ -17,23 +30,87 @@ function App() {
         <h1>{ mainTitle }</h1>
       </div>
 
+      {/* 새로운 글 발행 기능 */}
+      <input value={newPost} onkeydown='checkSpacebar();' onChange={(e)=>{
+        setNewPost(e.target.value)
+        }}></input>
+      <button onClick={()=>{
+        if (newPost.trim() === '') {
+          alert('내용을 입력하세요');
+          setNewPost(''); // 입력한 글 초기화
+        } else {
+          let copy = [...postTitle];
+          copy.push(newPost);
+          setPostTitle(copy);
+
+          let copy2 = [...likes];
+          copy2.push(0);
+          setLikes(copy2);
+
+          setNewPost(''); // 입력한 글 초기화
+        }
+      }}>새로운 글 발행</button>
+
+
       {/* 발행 글 목록 UI */}
-      <div className="post-list">
-        <h4>{postTitle[0]}</h4>
-        <p>발행날짜</p>
-      </div>
-      <div className="post-list">
-        <h4>{postTitle[1]}</h4>
-        <p>발행날짜</p>
-      </div>
-      <div className="post-list">
-        <h4>{postTitle[2]}</h4>
-        <p>발행날짜</p>
-      </div>
+      {
+        postTitle.map((a, n)=>{
+          return (
+            <div className="post-list" onClick={()=>{ modal === 0 ? setModal(1) : setModal(0); setModalState(n) }}>
+              <h4>{postTitle[n]} 
+              <span onClick={() => setLikes(prevLikes => {
+                const updatedLikes = [...prevLikes];
+                updatedLikes[n] += 1;
+                return updatedLikes;
+              })}>👍</span>
+                <span>{ likes[n] }</span>
+                <button onClick={ ()=>{
+                  // 쉘로우, 딥카피
+                  const copy = [...postTitle];
+                  copy[n] = '게시물 가려짐';
+                  setPostTitle(copy)
+                  }}>게시물 가리기</button>
+                  {/* 글 삭제 기능 */}
+                  <button onClick={()=>{
+                    let copy = [...postTitle];
+                    copy.splice(n, 1)
+                    setPostTitle(copy) 
+                  }}>게시물 삭제</button>
+              </h4>
+              <p>발행날짜</p>
+            </div>
+          )
+        })
+      }
+      
+  
+
+      {/* 글 상세 페이지 모달창 */}
+      {
+        modal === 1 ? <PostModal postTitle = {postTitle} setPostTitle = {setPostTitle}  modalState = {modalState} /> : null
+      }
+      
+      
+
+
     </div>
-
-
   );
+}
+
+
+function PostModal(props){
+  return (
+    <div className="post-modal">
+      <h4>{ props.postTitle[props.modalState] }</h4>
+      <p>발행날짜</p>
+      <p>상세 내용</p>
+      <button onClick={ ()=>{
+        const copy1 = [...props.postTitle];
+        copy1[0] = '게시물 가려짐';
+        props.setPostTitle(copy1)}} >글제목 수정
+      </button>
+    </div>
+  )
 }
 
 export default App;
