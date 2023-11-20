@@ -58,7 +58,7 @@ function App() {
 
           setNewPost(''); // 입력한 글 초기화
         }
-      }}>새로운 글 발행</button>
+      }}>새로운 글 발행하기</button>
 
 
       {/* 발행 글 목록 UI */}
